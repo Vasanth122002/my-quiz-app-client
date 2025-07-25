@@ -426,7 +426,8 @@ function App() {
             <div className="mt-10 pt-4 border-t border-gray-200 text-gray-600 text-sm">
               {isAuthReady ? (
                 <>
-               
+               <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3557454567887291"
+     crossorigin="anonymous"></script>
                   <p>
                     Your Anonymous User ID:{" "}
                     <span className="font-mono text-xs break-all">
@@ -470,6 +471,8 @@ function App() {
             >
               Back to Topics
             </button>
+                <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3557454567887291"
+     crossorigin="anonymous"></script>
           </div>
         )}
 
@@ -607,6 +610,8 @@ function App() {
             >
               Go to Home
             </button>
+                <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3557454567887291"
+     crossorigin="anonymous"></script>
           </div>
         )}
       </div>
