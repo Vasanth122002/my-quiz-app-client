@@ -10,13 +10,10 @@ import {
   onSnapshot,
   collection,
 } from "firebase/firestore";
-import { getAnalytics } from "firebase/analytics"; // Import getAnalytics
-import ReactGA from "react-ga4"; // Import react-ga4 for tracking methods
+import { getAnalytics } from "firebase/analytics";
+import ReactGA from "react-ga4";
 
 // Declare global variables for ESLint in local development.
-// These are provided by the Canvas environment when deployed.
-// If not defined, they will be 'undefined' locally, which the logic handles.
-// This explicit declaration helps ESLint understand these variables might exist globally.
 const __firebase_config =
   typeof window !== "undefined" && window.__firebase_config !== undefined
     ? window.__firebase_config
@@ -38,16 +35,15 @@ const firebaseConfig = {
   storageBucket: "quizappmern.firebasestorage.app",
   messagingSenderId: "438060218329",
   appId: "1:438060218329:web:50e3110bd1243add3e8bc8",
-  measurementId: "G-PSZPYQ9BH3", // Your GA4 Measurement ID is here!
+  measurementId: "G-PSZPYQ9BH3",
 };
 
 // Determine Firebase App Initialization based on environment
 let firebaseAppInstance;
-let analyticsInstance; // Variable to hold analytics instance
-let appFirebaseConfigToUse = firebaseConfig; // Default to local config
+let analyticsInstance;
+let appFirebaseConfigToUse = firebaseConfig;
 
 if (__firebase_config) {
-  // Check if Canvas global config exists
   try {
     appFirebaseConfigToUse = JSON.parse(__firebase_config);
   } catch (e) {
@@ -55,7 +51,6 @@ if (__firebase_config) {
       "Error parsing __firebase_config from Canvas, falling back to local Firebase config:",
       e
     );
-    // Fallback to local config already set as default
   }
 }
 
@@ -64,7 +59,7 @@ firebaseAppInstance = initializeApp(appFirebaseConfigToUse);
 
 // Initialize Google Analytics 4 if measurementId is available in the used config
 if (firebaseAppInstance.options.measurementId) {
-  analyticsInstance = getAnalytics(firebaseAppInstance); // Get analytics instance from the initialized app
+  analyticsInstance = getAnalytics(firebaseAppInstance);
   ReactGA.initialize(firebaseAppInstance.options.measurementId, {
     ga4bridge: analyticsInstance,
   });
@@ -80,20 +75,20 @@ if (firebaseAppInstance.options.measurementId) {
 
 const auth = getAuth(firebaseAppInstance);
 const db = getFirestore(firebaseAppInstance);
-// Use __app_id if available, otherwise fallback to a default for local testing
 const currentAppId = __app_id || "default-quiz-app";
 
 function App() {
-  const [page, setPage] = useState("home"); // 'home', 'topics', 'instructions', 'quiz', 'results'
+  const [page, setPage] = useState("home");
+  // Initialize quizzes as an empty array to prevent forEach on undefined
   const [quizzes, setQuizzes] = useState([]);
   const [selectedTopic, setSelectedTopic] = useState(null);
   const [selectedQuiz, setSelectedQuiz] = useState(null);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState(null);
   const [score, setScore] = useState(0);
-  const [quizTimer, setQuizTimer] = useState(0); // in seconds
+  const [quizTimer, setQuizTimer] = useState(0);
   const [timerActive, setTimerActive] = useState(false);
-  const timerRef = useRef(null); // Ref for setInterval
+  const timerRef = useRef(null);
 
   const [userId, setUserId] = useState(null);
   const [totalUniqueVisitors, setTotalUniqueVisitors] = useState(0);
@@ -101,13 +96,11 @@ function App() {
 
   // --- Firebase Visitor Tracking and Auth Setup ---
   useEffect(() => {
-    // Authenticate anonymously or re-use existing anonymous session
     const unsubscribeAuth = onAuthStateChanged(auth, async (user) => {
       if (user) {
         setUserId(user.uid);
         console.log("Firebase Authenticated User ID:", user.uid);
 
-        // Record visit - CORRECTED PATH HERE
         const visitRef = doc(
           db,
           "artifacts",
@@ -142,8 +135,6 @@ function App() {
         }
         setIsAuthReady(true);
       } else {
-        // Sign in anonymously if no user is found
-        // Use __initial_auth_token for Canvas, otherwise standard anonymous sign-in
         if (__initial_auth_token) {
           await signInAnonymously(auth, __initial_auth_token);
         } else {
@@ -152,14 +143,13 @@ function App() {
       }
     });
 
-    return () => unsubscribeAuth(); // Cleanup auth listener
-  }, []); // Run once on component mount
+    return () => unsubscribeAuth();
+  }, []);
 
   // Listen for total unique visitors from Firestore
   useEffect(() => {
-    if (!isAuthReady) return; // Wait until auth is ready
+    if (!isAuthReady) return;
 
-    // Listen for total unique visitors - CORRECTED PATH HERE
     const visitsCollectionRef = collection(
       db,
       "artifacts",
@@ -171,15 +161,15 @@ function App() {
     const unsubscribeVisitors = onSnapshot(
       visitsCollectionRef,
       (snapshot) => {
-        setTotalUniqueVisitors(snapshot.size); // Count total documents (unique visitors)
+        setTotalUniqueVisitors(snapshot.size);
       },
       (error) => {
         console.error("Error fetching unique visitors:", error);
       }
     );
 
-    return () => unsubscribeVisitors(); // Cleanup snapshot listener
-  }, [isAuthReady]); // Re-run when auth readiness changes
+    return () => unsubscribeVisitors();
+  }, [isAuthReady]);
 
   // --- Quiz Logic ---
 
@@ -187,12 +177,16 @@ function App() {
   useEffect(() => {
     const fetchQuizzes = async () => {
       try {
-        const response = await axios.get("/api/quizzes");
+        const response = await axios.get(
+          process.env.NODE_ENV === "production"
+            ? `${process.env.REACT_APP_BACKEND_URL}/api/quizzes`
+            : "/api/quizzes"
+        );
         setQuizzes(response.data);
       } catch (error) {
         console.error("Error fetching quizzes:", error);
         alert(
-          "Failed to load quizzes. Please check if the backend server is running."
+          "Failed to load quizzes. Please check if the backend server is running and accessible."
         );
       }
     };
@@ -206,17 +200,15 @@ function App() {
         setQuizTimer((prevTime) => prevTime - 1);
       }, 1000);
     } else if (quizTimer === 0 && timerActive) {
-      // Time's up! End quiz
       clearInterval(timerRef.current);
       setTimerActive(false);
       setPage("results");
     }
-    return () => clearInterval(timerRef.current); // Cleanup on unmount or timer stop
+    return () => clearInterval(timerRef.current);
   }, [quizTimer, timerActive]);
 
   // Google Analytics Page View Tracking
   useEffect(() => {
-    // Construct a meaningful page path based on the current application state
     let pagePath;
     let pageTitle;
 
@@ -254,7 +246,6 @@ function App() {
         pageTitle = "Unknown Page";
     }
 
-    // Send pageview event to Google Analytics
     if (ReactGA.isInitialized) {
       ReactGA.send({ hitType: "pageview", page: pagePath, title: pageTitle });
       console.log(
@@ -263,11 +254,12 @@ function App() {
     } else {
       console.warn("GA4 not initialized. Pageview not sent.");
     }
-  }, [page, selectedTopic, selectedQuiz]); // Dependencies for page view tracking
+  }, [page, selectedTopic, selectedQuiz]);
 
   const handleGetStarted = () => {
-    setPage("home"); // Set to 'home' first to trigger GA pageview for '/'
-    setTimeout(() => setPage("topics"), 50); // Then quickly transition to topics
+    setPage("home");
+    // Removed the setTimeout for a direct transition
+    setPage("topics");
   };
 
   const handleTopicSelect = (topic) => {
@@ -278,46 +270,39 @@ function App() {
   const handleStartQuiz = (quizId) => {
     const quizToStart = quizzes.find((q) => q.id === quizId);
     if (quizToStart) {
-      // Fetch full quiz details (including questions) from backend
       axios
-        .get(`/api/quizzes/${quizId}`)
+        .get(
+          process.env.NODE_ENV === "production"
+            ? `${process.env.REACT_APP_BACKEND_URL}/api/quizzes/${quizId}`
+            : `/api/quizzes/${quizId}`
+        )
         .then((response) => {
           setSelectedQuiz(response.data);
           setCurrentQuestionIndex(0);
           setScore(0);
           setSelectedAnswer(null);
-          setQuizTimer(response.data.duration * 60); // Set timer in seconds
+          setQuizTimer(response.data.duration * 60);
           setTimerActive(true);
           setPage("quiz");
-          // Optionally, track a custom event for quiz start
           if (ReactGA.isInitialized) {
             ReactGA.event({
               category: "Quiz",
               action: "Quiz Started",
               label: quizToStart.name,
-              value: quizToStart.duration, // Example: pass duration as value
+              value: quizToStart.duration,
             });
           }
         })
         .catch((error) => {
           console.error("Error fetching quiz details:", error);
           alert("Failed to load quiz details. Please try again.");
-          setPage("topics"); // Go back to topics if failed
+          setPage("topics");
         });
     }
   };
 
   const handleAnswerSelect = (option) => {
     setSelectedAnswer(option);
-    // Optionally, track a custom event for answer selection
-    // if (ReactGA.isInitialized) {
-    //   ReactGA.event({
-    //     category: 'Quiz Interaction',
-    //     action: 'Answer Selected',
-    //     label: `Q${currentQuestionIndex + 1} - ${option}`,
-    //     value: selectedQuiz.questions[currentQuestionIndex].correctAnswer === option ? 1 : 0 // 1 for correct, 0 for incorrect
-    //   });
-    // }
   };
 
   const handleNextQuestion = () => {
@@ -328,20 +313,18 @@ function App() {
       ) {
         setScore((prevScore) => prevScore + 1);
       }
-      setSelectedAnswer(null); // Reset selected answer for next question
+      setSelectedAnswer(null);
       if (currentQuestionIndex < selectedQuiz.questions.length - 1) {
         setCurrentQuestionIndex((prevIndex) => prevIndex + 1);
       } else {
-        // End of quiz
         setTimerActive(false);
         setPage("results");
-        // Optionally, track a custom event for quiz completion
         if (ReactGA.isInitialized) {
           ReactGA.event({
             category: "Quiz",
             action: "Quiz Completed",
             label: selectedQuiz.name,
-            value: score, // Total correct answers
+            value: score,
           });
         }
       }
@@ -379,15 +362,28 @@ function App() {
     return "Keep learning! Don't give up, practice makes perfect.";
   };
 
+  // ***** IMPORTANT FIX FOR 'forEach is not a function' *****
   const getUniqueTopics = () => {
     const topics = new Set();
-    quizzes.forEach((quiz) => topics.add(quiz.topic));
+    // Ensure 'quizzes' is an array before attempting to iterate.
+    // This prevents the TypeError if quizzes is not yet fetched or is null/undefined.
+    if (Array.isArray(quizzes)) {
+      quizzes.forEach((quiz) => {
+        // Also add a safety check for quiz.topic in case of malformed data
+        if (quiz && quiz.topic) {
+          topics.add(quiz.topic);
+        }
+      });
+    }
     return Array.from(topics);
   };
+  // *********************************************************
 
-  const filteredQuizzes = selectedTopic
+  // Ensure filteredQuizzes is always an array, even if quizzes is not yet fetched
+  const filteredQuizzes = Array.isArray(quizzes) && selectedTopic
     ? quizzes.filter((quiz) => quiz.topic === selectedTopic)
-    : quizzes;
+    : Array.isArray(quizzes) ? quizzes : [];
+
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex flex-col items-center justify-center p-4">
@@ -493,34 +489,40 @@ function App() {
               begin. Answer all questions before the time runs out!
             </p>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
-              {filteredQuizzes.map((quiz) => (
-                <div
-                  key={quiz.id}
-                  className="bg-green-100 p-5 rounded-lg shadow-md flex flex-col justify-between items-start text-left"
-                >
-                  <div>
-                    <h3 className="text-2xl font-bold text-green-800 mb-2">
-                      {quiz.name}
-                    </h3>
-                    <p className="text-green-700 text-sm mb-2">
-                      {quiz.description}
-                    </p>
-                    <p className="text-green-600 text-sm">
-                      Questions:{" "}
-                      {quiz.questions ? quiz.questions.length : "Loading..."}
-                    </p>
-                    <p className="text-green-600 text-sm">
-                      Duration: {quiz.duration} minutes
-                    </p>
-                  </div>
-                  <button
-                    onClick={() => handleStartQuiz(quiz.id)}
-                    className="mt-4 px-6 py-2 bg-green-600 text-white rounded-full shadow-md hover:bg-green-700 transform hover:scale-105 transition-all duration-300 ease-in-out focus:outline-none focus:ring-4 focus:ring-green-300"
+              {filteredQuizzes.length > 0 ? ( // Add a check here for filteredQuizzes
+                filteredQuizzes.map((quiz) => (
+                  <div
+                    key={quiz.id}
+                    className="bg-green-100 p-5 rounded-lg shadow-md flex flex-col justify-between items-start text-left"
                   >
-                    Start Quiz
-                  </button>
-                </div>
-              ))}
+                    <div>
+                      <h3 className="text-2xl font-bold text-green-800 mb-2">
+                        {quiz.name}
+                      </h3>
+                      <p className="text-green-700 text-sm mb-2">
+                        {quiz.description}
+                      </p>
+                      <p className="text-green-600 text-sm">
+                        Questions:{" "}
+                        {quiz.questions ? quiz.questions.length : "Loading..."}
+                      </p>
+                      <p className="text-green-600 text-sm">
+                        Duration: {quiz.duration} minutes
+                      </p>
+                    </div>
+                    <button
+                      onClick={() => handleStartQuiz(quiz.id)}
+                      className="mt-4 px-6 py-2 bg-green-600 text-white rounded-full shadow-md hover:bg-green-700 transform hover:scale-105 transition-all duration-300 ease-in-out focus:outline-none focus:ring-4 focus:ring-green-300"
+                    >
+                      Start Quiz
+                    </button>
+                  </div>
+                ))
+              ) : (
+                <p className="col-span-full text-gray-600 text-lg">
+                  No quizzes found for this topic.
+                </p>
+              )}
             </div>
             <button
               onClick={() => setPage("topics")}
