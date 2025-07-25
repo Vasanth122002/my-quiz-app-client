@@ -1,0 +1,7 @@
+# Node modules
+node_modules/
+# Build output
+build/
+.DS_Store # macOS specific
+npm-debug.log
+yarn-error.log
