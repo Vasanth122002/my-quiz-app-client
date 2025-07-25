@@ -426,12 +426,7 @@ function App() {
             <div className="mt-10 pt-4 border-t border-gray-200 text-gray-600 text-sm">
               {isAuthReady ? (
                 <>
-                  <p>
-                    Total Unique Visitors:{" "}
-                    <span className="font-bold text-blue-600">
-                   //   {totalUniqueVisitors}  
-                    </span>
-                  </p>
+               
                   <p>
                     Your Anonymous User ID:{" "}
                     <span className="font-mono text-xs break-all">
