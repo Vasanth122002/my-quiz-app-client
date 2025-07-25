@@ -429,7 +429,7 @@ function App() {
                   <p>
                     Total Unique Visitors:{" "}
                     <span className="font-bold text-blue-600">
-                      {totalUniqueVisitors}
+                   <!--   {totalUniqueVisitors}  -->
                     </span>
                   </p>
                   <p>
