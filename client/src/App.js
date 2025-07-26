@@ -83,6 +83,7 @@ function App() {
   const [page, setPage] = useState("home"); // Possible values: 'home', 'topics', 'instructions', 'quiz', 'results', 'about', 'privacy', 'terms', 'blog', 'blogPost'
 
   // Quiz-related states
+  // Initialized as an empty array to prevent 'forEach is not a function' errors
   const [quizzes, setQuizzes] = useState([]);
   const [selectedTopic, setSelectedTopic] = useState(null);
   const [selectedQuiz, setSelectedQuiz] = useState(null);
@@ -191,21 +192,19 @@ function App() {
     const fetchQuizzes = async () => {
       try {
         const response = await axios.get("/api/quizzes");
+        // Ensure the response data is an array before setting state
         if (Array.isArray(response.data)) {
           setQuizzes(response.data);
         } else {
-          console.error(
-            "API did not return an array for quizzes:",
-            response.data
-          );
+          console.error("API did not return an array for quizzes:", response.data);
           setQuizzes([]); // Default to empty array on unexpected response
         }
       } catch (error) {
         console.error("Error fetching quizzes:", error);
         alert(
-          "Failed to load quizzes. Please check if the backend server is running."
+          "Failed to load quizzes. Please check if the backend server is running and returning an array."
         );
-        setQuizzes([]);
+        setQuizzes([]); // Ensure quizzes is an empty array even on error
       }
     };
     fetchQuizzes();
@@ -247,9 +246,7 @@ function App() {
             ? selectedTopic.replace(/\s+/g, "-").toLowerCase()
             : "unknown"
         }`;
-        pageTitle = `Instructions - ${
-          selectedTopic || "Unknown Programming Topic"
-        }`;
+        pageTitle = `Instructions - ${selectedTopic || "Unknown Programming Topic"}`;
         break;
       case "quiz":
         pagePath = `/quiz/${selectedQuiz ? selectedQuiz.id : "unknown"}`;
@@ -280,9 +277,7 @@ function App() {
         pageTitle = "Programming Blog";
         break;
       case "blogPost":
-        pagePath = `/blog/${
-          selectedBlogPost ? selectedBlogPost.id : "unknown-post"
-        }`;
+        pagePath = `/blog/${selectedBlogPost ? selectedBlogPost.id : "unknown-post"}`;
         pageTitle = `Blog Post - ${
           selectedBlogPost ? selectedBlogPost.title : "Unknown Blog Post"
         }`;
@@ -336,16 +331,7 @@ function App() {
           setTimerActive(true);
           setPage("quiz");
           // Placeholder for quiz-specific introduction text
-          setQuizIntroText(
-            response.data.introduction ||
-              `This quiz will challenge your knowledge on ${
-                quizToStart.topic
-              } with specific questions related to ${quizToStart.name.toLowerCase()}. Get ready to test your understanding of key programming concepts and important details. You have ${
-                response.data.duration
-              } minutes to complete ${
-                response.data.questions.length
-              } questions. Good luck with your coding challenge!`
-          );
+          setQuizIntroText(response.data.introduction || `This quiz will challenge your knowledge on ${quizToStart.topic} with specific questions related to ${quizToStart.name.toLowerCase()}. Get ready to test your understanding of key programming concepts and important details. You have ${response.data.duration} minutes to complete ${response.data.questions.length} questions. Good luck with your coding challenge!`);
           if (ReactGA.isInitialized) {
             ReactGA.event({
               category: "Quiz",
@@ -430,12 +416,10 @@ function App() {
 
   // Feedback for quiz results
   const getPerformanceFeedback = (percentage) => {
-    if (percentage === 100)
-      return "Excellent! You aced it! A true coding master!";
+    if (percentage === 100) return "Excellent! You aced it! A true coding master!";
     if (percentage >= 80)
       return "Great job! You have a strong grasp of programming concepts.";
-    if (percentage >= 60)
-      return "Good effort! Keep coding and practicing to improve.";
+    if (percentage >= 60) return "Good effort! Keep coding and practicing to improve.";
     if (percentage >= 40)
       return "You're getting there! Review the programming concepts and try again.";
     return "Keep learning! Don't give up on coding, practice makes perfect.";
@@ -443,11 +427,9 @@ function App() {
 
   // Extract unique topics from available quizzes
   const getUniqueTopics = () => {
-    // Ensure quizzes is an array before calling forEach
+    // Ensure quizzes is an array before attempting to iterate
     if (!Array.isArray(quizzes)) {
-      console.warn(
-        "Quizzes data is not an array, defaulting to empty for topics."
-      );
+      console.warn("Quizzes data is not an array, defaulting to empty for topics.");
       return [];
     }
     const topics = new Set();
@@ -466,12 +448,10 @@ function App() {
   const blogPosts = [
     {
       id: "understanding-async-js",
-      title:
-        "Understanding Asynchronous JavaScript: Callbacks, Promises, and Async/Await",
-      author: "[VasanthM]", // Replace with your name
+      title: "Understanding Asynchronous JavaScript: Callbacks, Promises, and Async/Await",
+      author: "[Your Name]", // Replace with your name
       date: "July 20, 2025",
-      excerpt:
-        "Asynchronous programming is a fundamental concept in JavaScript that often confuses beginners. Learn about callbacks, promises, and the modern async/await syntax to write non-blocking code.",
+      excerpt: "Asynchronous programming is a fundamental concept in JavaScript that often confuses beginners. Learn about callbacks, promises, and the modern async/await syntax to write non-blocking code.",
       fullContent: `
         <p>Asynchronous programming is a fundamental concept in JavaScript that often
         confuses beginners. Unlike synchronous code that executes line by line,
@@ -560,16 +540,14 @@ function App() {
         <p>Using <code>async</code> and <code>await</code> makes asynchronous code flow logically, almost as if it were synchronous,
         significantly reducing complexity and improving readability, especially for complex operations.
         Mastering these concepts is key to writing efficient, modern, and maintainable JavaScript.</p>
-      `,
+      `
     },
     {
       id: "python-data-structures",
-      title:
-        "The Basics of Python Data Structures: Lists, Tuples, Sets, and Dictionaries",
-      author: "[VasanthM]", // Replace with your name
+      title: "The Basics of Python Data Structures: Lists, Tuples, Sets, and Dictionaries",
+      author: "[Your Name]", // Replace with your name
       date: "July 15, 2025",
-      excerpt:
-        "Python offers powerful built-in data structures. Learn about Lists, Tuples, Sets, and Dictionaries and when to use each for efficient data management.",
+      excerpt: "Python offers powerful built-in data structures. Learn about Lists, Tuples, Sets, and Dictionaries and when to use each for efficient data management.",
       fullContent: `
         <p>Python offers a rich set of built-in data structures that are
         essential for organizing and managing data efficiently. Understanding
@@ -632,15 +610,14 @@ function App() {
         </code></pre>
         <p>Dictionaries provide extremely fast lookups by key, making them indispensable for managing related data.
         Choosing the right data structure can significantly impact your program's performance, memory usage, and readability.</p>
-      `,
+      `
     },
     {
       id: "effective-debugging-tips",
       title: "Effective Debugging Tips for Programmers",
-      author: "[VasanthM]", // Replace with your name
+      author: "[Your Name]", // Replace with your name
       date: "July 10, 2025",
-      excerpt:
-        "Bugs are an inevitable part of coding. Learn essential debugging strategies to quickly identify and fix issues in your code, saving you time and frustration.",
+      excerpt: "Bugs are an inevitable part of coding. Learn essential debugging strategies to quickly identify and fix issues in your code, saving you time and frustration.",
       fullContent: `
         <p>Debugging is an essential skill for any programmer. No matter how experienced you are,
         bugs are an inevitable part of the software development process. Learning to effectively
@@ -698,54 +675,30 @@ function App() {
         <p>Debugging is a skill that improves with practice. By adopting these strategies,
         you'll become more proficient at finding and fixing bugs, making you a more
         confident and efficient programmer.</p>
-      `,
-    },
+      `
+    }
   ];
 
   // Handler to navigate to a specific blog post
   const handleReadMore = (blogId) => {
-    const post = blogPosts.find((p) => p.id === blogId);
+    const post = blogPosts.find(p => p.id === blogId);
     if (post) {
       setSelectedBlogPost(post);
       setPage("blogPost"); // Change page to single blog post view
     }
   };
 
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex flex-col items-center justify-center p-4">
       <div className="w-full max-w-4xl bg-white shadow-2xl rounded-2xl p-8 transform transition-all duration-300 ease-in-out hover:scale-[1.01]">
         {/* Global Navigation Bar */}
         <nav className="mb-6 flex justify-center space-x-4">
-          <button
-            onClick={handleGoHome}
-            className="text-blue-600 hover:underline"
-          >
-            Home
-          </button>
-          <button
-            onClick={() => setPage("blog")}
-            className="text-blue-600 hover:underline"
-          >
-            Blog
-          </button>
-          <button
-            onClick={() => setPage("about")}
-            className="text-blue-600 hover:underline"
-          >
-            About This App
-          </button>
-          <button
-            onClick={() => setPage("privacy")}
-            className="text-blue-600 hover:underline"
-          >
-            Privacy Policy
-          </button>
-          <button
-            onClick={() => setPage("terms")}
-            className="text-blue-600 hover:underline"
-          >
-            Terms of Service
-          </button>
+          <button onClick={handleGoHome} className="text-blue-600 hover:underline">Home</button>
+          <button onClick={() => setPage('blog')} className="text-blue-600 hover:underline">Blog</button>
+          <button onClick={() => setPage('about')} className="text-blue-600 hover:underline">About This App</button>
+          <button onClick={() => setPage('privacy')} className="text-blue-600 hover:underline">Privacy Policy</button>
+          <button onClick={() => setPage('terms')} className="text-blue-600 hover:underline">Terms of Service</button>
         </nav>
 
         <hr className="my-6 border-t-2 border-gray-200" />
@@ -757,12 +710,11 @@ function App() {
               CodeCrafter Quizzes
             </h1>
             <p className="text-lg text-gray-700 mb-8 max-w-2xl mx-auto">
-              Welcome to the ultimate platform to test your{" "}
-              <b> programming knowledge and coding concepts</b> ! Select a topic
-              and challenge yourself with our expertly crafted quizzes. Our
-              quizzes are designed not just to test what you know, but also to
-              help you discover new facts and deepen your understanding across
-              various programming languages and technical domains.
+              Welcome to the ultimate platform to test your **programming knowledge and coding concepts**! Select a
+              topic and challenge yourself with our expertly crafted quizzes. Our quizzes
+              are designed not just to test what you know, but also to help you
+              discover new facts and deepen your understanding across various
+              programming languages and technical domains.
             </p>
 
             {/* Enhanced Home Page Content for AdSense (Programming/Coding Focused) */}
@@ -771,35 +723,21 @@ function App() {
                 Master Programming and Coding with Engaging Quizzes
               </h2>
               <p className="text-gray-700 mb-4">
-                Welcome to <b> CodeCrafter Quizzes </b>, your premier platform
-                for testing and enhancing your programming knowledge! We offer a
-                diverse range of quizzes covering core concepts in **Python,
-                JavaScript, Java, C++, data structures, algorithms,
-                object-oriented programming, web development fundamentals,
-                cybersecurity basics, and more**. Each quiz is meticulously
-                designed by a dedicated programmer (that's me!) to provide an
-                engaging and educational experience.
+                Welcome to **CodeCrafter Quizzes**, your premier platform for testing and enhancing your programming knowledge!
+                We offer a diverse range of quizzes covering core concepts in **Python, JavaScript, Java, C++, data structures, algorithms,
+                object-oriented programming, web development fundamentals, cybersecurity basics, and more**. Each quiz is
+                 meticulously designed by a dedicated programmer (that's me!) to provide an engaging and educational experience.
               </p>
               <p className="text-gray-700 mb-4">
-                Whether you're a,{" "}
-                <b>
-                  student learning your first language, a developer looking to
-                  sharpen specific skills, an aspiring coder preparing for
-                  interviews
-                </b>{" "}
-                , or simply someone passionate about the logic and art of
-                programming, you'll find quizzes that challenge, inform, and
-                entertain. Our interactive format makes learning complex coding
-                concepts enjoyable and accessible for all levels.
+                Whether you're a **student learning your first language, a developer looking to sharpen specific skills,
+                an aspiring coder preparing for interviews**, or simply someone passionate about the logic and art of programming,
+                you'll find quizzes that challenge, inform, and entertain. Our interactive format makes learning complex coding concepts
+                enjoyable and accessible for all levels.
               </p>
               <p className="text-gray-700">
-                I am constantly expanding this library with the latest
-                programming trends, fundamental concepts, and practical coding
-                challenges, ensuring there's always something new to explore.
-                Dive in, discover your strengths, and solidify your
-                understanding of the ever-evolving world of software
-                development. Get started now and embark on your journey to
-                becoming a coding master!
+                I am constantly expanding this library with the latest programming trends, fundamental concepts, and practical coding challenges,
+                ensuring there's always something new to explore. Dive in, discover your strengths, and solidify your understanding
+                of the ever-evolving world of software development. Get started now and embark on your journey to becoming a coding master!
               </p>
             </div>
 
@@ -815,34 +753,28 @@ function App() {
                 How to Use CodeCrafter Quizzes
               </h2>
               <ul className="list-disc list-inside text-gray-700 space-y-2">
+                <li>Click "Start Coding Quizzes" to view available programming topics.</li>
+                <li>Choose your desired programming language or concept topic.</li>
                 <li>
-                  Click <b>Start Coding Quizzes</b> to view available
-                  programming topics.
+                  Read the instructions carefully, then click "Start Quiz".
                 </li>
+                <li>Answer questions within the given time limit, focusing on accuracy.</li>
                 <li>
-                  Choose your desired programming language or concept topic.
+                  Review your results and performance feedback at the end to learn from mistakes.
                 </li>
-                <li>
-                  Read the instructions carefully, then click <b> Start Quiz</b>
-                  .
-                </li>
-                <li>
-                  Answer questions within the given time limit, focusing on
-                  accuracy.
-                </li>
-                <li>
-                  Review your results and performance feedback at the end to
-                  learn from mistakes.
-                </li>
-                <li>
-                  Go back to the home page to try another coding challenge!
-                </li>
+                <li>Go back to the home page to try another coding challenge!</li>
               </ul>
             </div>
 
             <div className="mt-10 pt-4 border-t border-gray-200 text-gray-600 text-sm">
               {isAuthReady ? (
                 <>
+                  <p>
+                    Total Unique Visitors:{" "}
+                    <span className="font-bold text-blue-600">
+                      {totalUniqueVisitors}
+                    </span>
+                  </p>
                   <p>
                     Your Anonymous User ID:{" "}
                     <span className="font-mono text-xs break-all">
@@ -864,6 +796,7 @@ function App() {
               Choose Your Programming Topic
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {/* Ensure getUniqueTopics returns an array before mapping */}
               {getUniqueTopics().length > 0 ? (
                 getUniqueTopics().map((topic) => (
                   <button
@@ -876,8 +809,7 @@ function App() {
                 ))
               ) : (
                 <p className="col-span-full text-gray-600 text-lg">
-                  No programming topics available. Please add quizzes via the
-                  backend.
+                  No programming topics available. Please add quizzes via the backend.
                 </p>
               )}
             </div>
@@ -909,8 +841,7 @@ function App() {
 
             <p className="text-lg text-gray-700 mb-8">
               Select a quiz from the list below. Once you start, a timer will
-              begin. Answer all questions before the time runs out! Sharpen your
-              coding logic!
+              begin. Answer all questions before the time runs out! Sharpen your coding logic!
             </p>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
               {filteredQuizzes.map((quiz) => (
@@ -1052,22 +983,13 @@ function App() {
                   const userAnswer = userAnswers[index];
                   const isCorrect = userAnswer === question.correctAnswer;
                   return (
-                    <div
-                      key={index}
-                      className="mb-6 p-4 border-b border-gray-100 last:border-b-0"
-                    >
+                    <div key={index} className="mb-6 p-4 border-b border-gray-100 last:border-b-0">
                       <p className="font-semibold text-xl mb-2">
                         Question {index + 1}: {question.questionText}
                       </p>
                       <p className="text-sm text-gray-600 mb-1">
                         Your Answer:{" "}
-                        <span
-                          className={
-                            isCorrect
-                              ? "text-green-600 font-medium"
-                              : "text-red-600 font-medium"
-                          }
-                        >
+                        <span className={isCorrect ? "text-green-600 font-medium" : "text-red-600 font-medium"}>
                           {userAnswer || "Not answered"}
                         </span>
                       </p>
@@ -1092,28 +1014,24 @@ function App() {
                     What's Next? Continue Coding!
                   </h3>
                   <p className="text-gray-700 mb-4">
-                    You've completed the <b>"{selectedQuiz.name}" </b>quiz!
-                    Programming is a continuous journey. To further enhance your
-                    knowledge on{" "}
-                    <span className="font-bold">{selectedQuiz.topic}</span>,
-                    consider exploring the following:
+                    You've completed the "{selectedQuiz.name}" quiz! Programming is a
+                    continuous journey. To further enhance your knowledge on{" "}
+                    <span className="font-bold">{selectedQuiz.topic}</span>, consider
+                    exploring the following:
                   </p>
                   <ul className="list-disc list-inside text-gray-700 space-y-2">
                     <li>
-                      <b>Explore more quizzes: </b> Navigate back to the topics
-                      page and try another quiz in a related programming area.
+                      **Explore more quizzes:** Navigate back to the topics page and
+                      try another quiz in a related programming area.
                     </li>
                     <li>
-                      <b> Practice coding: </b> The best way to learn is by
-                      doing! Head to your favorite IDE and start coding.
+                      **Practice coding:** The best way to learn is by doing! Head to your favorite IDE and start coding.
                     </li>
                     <li>
-                      <b>Consult Documentation:</b> Refer to official language
-                      documentation for deeper understanding.
+                      **Consult Documentation:** Refer to official language documentation for deeper understanding.
                     </li>
                     <li>
-                      <b>Read our Blog:</b> Check out our latest articles for
-                      coding tips and insights!
+                      **Read our Blog:** Check out our latest articles for coding tips and insights!
                     </li>
                   </ul>
                 </div>
@@ -1134,57 +1052,23 @@ function App() {
         {/* About Us Page */}
         {page === "about" && (
           <div className="text-center">
-            <h2 className="text-4xl font-bold text-gray-800 mb-6">
-              About CodeCrafter Quizzes
-            </h2>
+            <h2 className="text-4xl font-bold text-gray-800 mb-6">About CodeCrafter Quizzes</h2>
             <div className="text-left bg-gray-50 p-8 rounded-xl shadow-lg mb-8">
               <p className="text-lg text-gray-700 mb-4">
-                Welcome to <b>CodeCrafter Quizzes</b>! I am passionate about
-                making
-                <b>
-                  programming and coding concept learning engaging, accessible,
-                  and fun
-                </b>{" "}
-                for everyone. My mission is to provide a high-quality platform
-                where you can{" "}
-                <b>
-                  test and expand your knowledge across a wide array of
-                  programming languages and technical subjects
-                </b>
-                , from foundational syntax to advanced algorithmic thinking. My
-                goal is to help you learn new coding facts and deepen your
-                understanding of software development.
+                Welcome to **CodeCrafter Quizzes**! I am passionate about making **programming and coding concept learning engaging, accessible, and fun** for everyone. My mission is to provide a high-quality platform where you can **test and expand your knowledge across a wide array of programming languages and technical subjects**, from foundational syntax to advanced algorithmic thinking. My goal is to help you learn new coding facts and deepen your understanding of software development.
               </p>
               <p className="text-lg text-gray-700 mb-4">
-                As the sole creator of this application, I meticulously design
-                each quiz and question to ensure{" "}
-                <b>accuracy, relevance, and an enjoyable learning experience</b>
-                . I believe that interactive quizzes are a powerful tool for
-                <b>coding education and personal development in tech</b>,
-                offering immediate feedback and highlighting areas for further
-                exploration in your journey through the ever-evolving landscape
-                of programming.
+                As the sole creator of this application, I meticulously design each quiz and question to ensure **accuracy, relevance, and an enjoyable learning experience**. I believe that interactive quizzes are a powerful tool for **coding education and personal development in tech**, offering immediate feedback and highlighting areas for further exploration in your journey through the ever-evolving landscape of programming.
               </p>
               <p className="text-lg text-gray-700 mb-4">
-                I am committed to continuously expanding this quiz library,
-                covering everything from{" "}
-                <b>
-                  Python, JavaScript, Java, and C++ fundamentals to data
-                  structures, algorithms, object-oriented programming, web
-                  development frameworks, database concepts, and more
-                </b>
-                . Your curiosity for coding is my inspiration!
+                I am committed to continuously expanding this quiz library, covering everything from **Python, JavaScript, Java, and C++ fundamentals to data structures, algorithms, object-oriented programming, web development frameworks, database concepts, and more**. Your curiosity for coding is my inspiration!
               </p>
               <p className="text-lg text-gray-700">
-                Thank you for being a part of this learning community. I hope
-                you enjoy the challenge and discover something new with every
-                programming quiz you take!
+                Thank you for being a part of this learning community. I hope you enjoy
+                the challenge and discover something new with every programming quiz you take!
               </p>
             </div>
-            <button
-              onClick={handleGoHome}
-              className="px-6 py-2 bg-gray-300 text-gray-800 rounded-full hover:bg-gray-400 transition-colors duration-200 focus:outline-none focus:ring-4 focus:ring-gray-300"
-            >
+            <button onClick={handleGoHome} className="px-6 py-2 bg-gray-300 text-gray-800 rounded-full hover:bg-gray-400 transition-colors duration-200 focus:outline-none focus:ring-4 focus:ring-gray-300">
               Back to Home
             </button>
           </div>
@@ -1193,176 +1077,117 @@ function App() {
         {/* Privacy Policy Page */}
         {page === "privacy" && (
           <div className="text-center">
-            <h2 className="text-4xl font-bold text-gray-800 mb-6">
-              Privacy Policy
-            </h2>
+            <h2 className="text-4xl font-bold text-gray-800 mb-6">Privacy Policy</h2>
             <div className="text-left bg-gray-50 p-8 rounded-xl shadow-lg mb-8">
               <p className="text-lg text-gray-700 mb-4">
-                <b> Effective Date:</b> July 26, 2025
+                **Effective Date:** July 26, 2025
               </p>
               <p className="text-lg text-gray-700 mb-4">
-                Your privacy is important to me. This Privacy Policy explains
-                how I,{" "}
-                <b>
-                  {" "}
-                  VasanthM , the sole owner and operator of CodeCrafter Quizzes
-                </b>{" "}
-                (the "App"), collect, use, and disclose information about you
-                when you use my quiz application.
+                Your privacy is important to me. This Privacy Policy explains how
+                I, **[Your Full Name/Developer Name]** (the "Developer," "I," or "me"), the sole owner and operator of
+                **CodeCrafter Quizzes** (the "App"), collect, use, and disclose information about you when you use my quiz application.
               </p>
-              <h3 className="text-2xl font-bold text-gray-800 mb-3">
-                1. Information I Collect
-              </h3>
+              <h3 className="text-2xl font-bold text-gray-800 mb-3">1. Information I Collect</h3>
               <p className="text-lg text-gray-700 mb-2">
-                I collect information to provide and improve my App to you. The
-                types of information I collect include:
+                I collect information to provide and improve my App to you.
+                The types of information I collect include:
               </p>
               <ul className="list-disc list-inside text-gray-700 mb-4 pl-4">
                 <li>
-                  <b> Anonymous Usage Data:</b> I use Google Analytics 4 (GA4)
-                  and Firebase to collect anonymous data about how users
-                  interact with my App, such as pages visited, quizzes taken,
-                  time spent on the App, and device information. This data is
-                  aggregated and does not personally identify you.
+                  **Anonymous Usage Data:** I use Google Analytics 4 (GA4) and
+                  Firebase to collect anonymous data about how users interact with
+                  my App, such as pages visited, quizzes taken, time spent on the App,
+                  and device information. This data is aggregated and does not
+                  personally identify you.
                 </li>
                 <li>
-                  <b>Firebase Anonymous Authentication:</b> I use Firebase
-                  Anonymous Authentication to provide a persistent, anonymous
-                  user ID for each visitor. This helps me track unique visitors
-                  and basic usage patterns within the App without collecting
-                  personal information.
+                  **Firebase Anonymous Authentication:** I use Firebase Anonymous
+                  Authentication to provide a persistent, anonymous user ID for each
+                  visitor. This helps me track unique visitors and basic usage
+                  patterns within the App without collecting personal information.
                 </li>
                 <li>
-                  <b>No Personal Identifiable Information (PII):</b> I do not
-                  intentionally collect any personally identifiable information
-                  (e.g., names, email addresses, contact details) from users
-                  through the App itself. All quiz interactions and scores are
-                  stored anonymously.
+                  **No Personal Identifiable Information (PII):** I do not intentionally
+                  collect any personally identifiable information (e.g., names, email
+                  addresses, contact details) from users through the App itself. All quiz interactions
+                  and scores are stored anonymously.
                 </li>
               </ul>
 
-              <h3 className="text-2xl font-bold text-gray-800 mb-3">
-                2. How I Use Your Information
-              </h3>
+              <h3 className="text-2xl font-bold text-gray-800 mb-3">2. How I Use Your Information</h3>
               <p className="text-lg text-gray-700 mb-4">
-                I use the anonymous information I collect for the following
-                purposes:
+                I use the anonymous information I collect for the following purposes:
+              </p>
+              <ul className="list-disc list-inside text-gray-700 mb-4 pl-4">
+                <li>To operate, maintain, and improve the App and its programming quiz features.</li>
+                <li>To understand and analyze how users interact with the App, to make it more engaging and effective for learning.</li>
+                <li>To monitor and analyze trends, usage, and activities in connection with the App's performance.</li>
+                <li>To display relevant advertisements through services like Google AdSense (once approved), based on general usage patterns.</li>
+              </ul>
+
+              <h3 className="text-2xl font-bold text-gray-800 mb-3">3. How I Share Your Information</h3>
+              <p className="text-lg text-gray-700 mb-4">
+                I do not share your personal identifiable information with third parties, because I do not collect any.
+                I may share aggregated or de-identified information, which cannot reasonably
+                be used to identify you, for various purposes, including for analytical
+                or operational improvements.
               </p>
               <ul className="list-disc list-inside text-gray-700 mb-4 pl-4">
                 <li>
-                  To operate, maintain, and improve the App and its programming
-                  quiz features.
+                  **Service Providers:** I may share anonymous usage data with third-party
+                  service providers like Google Analytics and Firebase for analytics and
+                  anonymous authentication purposes. These providers are bound by their own privacy policies.
                 </li>
                 <li>
-                  To understand and analyze how users interact with the App, to
-                  make it more engaging and effective for learning.
-                </li>
-                <li>
-                  To monitor and analyze trends, usage, and activities in
-                  connection with the App's performance.
-                </li>
-                <li>
-                  To display relevant advertisements through services like
-                  Google AdSense (once approved), based on general usage
-                  patterns.
+                  **Legal Compliance:** I may disclose anonymous user IDs if required to do so
+                  by law or in the good faith belief that such action is necessary to comply
+                  with a legal obligation, protect my rights or property, or prevent fraud.
                 </li>
               </ul>
 
-              <h3 className="text-2xl font-bold text-gray-800 mb-3">
-                3. How I Share Your Information
-              </h3>
+              <h3 className="text-2xl font-bold text-gray-800 mb-3">4. Third-Party Advertising (Google AdSense)</h3>
               <p className="text-lg text-gray-700 mb-4">
-                I do not share your personal identifiable information with third
-                parties, because I do not collect any. I may share aggregated or
-                de-identified information, which cannot reasonably be used to
-                identify you, for various purposes, including for analytical or
-                operational improvements.
-              </p>
-              <ul className="list-disc list-inside text-gray-700 mb-4 pl-4">
-                <li>
-                  <b> Service Providers: </b>I may share anonymous usage data
-                  with third-party service providers like Google Analytics and
-                  Firebase for analytics and anonymous authentication purposes.
-                  These providers are bound by their own privacy policies.
-                </li>
-                <li>
-                  <b>Legal Compliance:</b> I may disclose anonymous user IDs if
-                  required to do so by law or in the good faith belief that such
-                  action is necessary to comply with a legal obligation, protect
-                  my rights or property, or prevent fraud.
-                </li>
-              </ul>
-
-              <h3 className="text-2xl font-bold text-gray-800 mb-3">
-                4. Third-Party Advertising (Google AdSense)
-              </h3>
-              <p className="text-lg text-gray-700 mb-4">
-                I intend to use Google AdSense to serve advertisements on this
-                App. Google AdSense may use cookies to serve ads based on your
-                prior visits to this App or other websites. Google's use of
-                advertising cookies enables it and its partners to serve ads to
-                users based on their visit to your sites and/or other sites on
-                the Internet.
+                I intend to use Google AdSense to serve advertisements on this App.
+                Google AdSense may use cookies to serve ads based on your prior visits
+                to this App or other websites. Google's use of advertising cookies enables
+                it and its partners to serve ads to users based on their visit to your
+                sites and/or other sites on the Internet.
               </p>
               <p className="text-lg text-gray-700 mb-4">
-                You may opt out of personalized advertising by visiting Ads
-                Settings. Alternatively, you can opt out of a third-party
-                vendor's use of cookies for personalized advertising by visiting{" "}
-                <a
-                  href="http://www.aboutads.info/choices/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-600 hover:underline"
-                >
-                  www.aboutads.info/choices/
-                </a>
-                .
+                You may opt out of personalized advertising by visiting Ads Settings.
+                Alternatively, you can opt out of a third-party vendor's use of cookies
+                for personalized advertising by visiting <a href="http://www.aboutads.info/choices/" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">www.aboutads.info/choices/</a>.
               </p>
 
-              <h3 className="text-2xl font-bold text-gray-800 mb-3">
-                5. Data Security
-              </h3>
+              <h3 className="text-2xl font-bold text-gray-800 mb-3">5. Data Security</h3>
               <p className="text-lg text-gray-700 mb-4">
-                I implement reasonable security measures designed to protect the
-                information I collect (which is anonymous usage data) from
-                unauthorized access, disclosure, alteration, and destruction.
-                However, no security system is impenetrable, and I cannot
-                guarantee the absolute security of my systems.
+                I implement reasonable security measures designed to protect the information
+                I collect (which is anonymous usage data) from unauthorized access, disclosure, alteration, and destruction.
+                However, no security system is impenetrable, and I cannot guarantee the
+                absolute security of my systems.
               </p>
 
-              <h3 className="text-2xl font-bold text-gray-800 mb-3">
-                6. Children's Privacy
-              </h3>
+              <h3 className="text-2xl font-bold text-gray-800 mb-3">6. Children's Privacy</h3>
               <p className="text-lg text-gray-700 mb-4">
-                This App is not intended for use by children under the age of
-                13. I do not knowingly collect personally identifiable
-                information from children under 13. If I become aware that a
-                child under 13 has provided me with personal information, I will
+                This App is not intended for use by children under the age of 13. I do not knowingly
+                collect personally identifiable information from children under 13. If I become
+                aware that a child under 13 has provided me with personal information, I will
                 take steps to delete such information from my files.
               </p>
 
-              <h3 className="text-2xl font-bold text-gray-800 mb-3">
-                7. Changes to This Privacy Policy
-              </h3>
+              <h3 className="text-2xl font-bold text-gray-800 mb-3">7. Changes to This Privacy Policy</h3>
               <p className="text-lg text-gray-700 mb-4">
-                I may update this Privacy Policy from time to time. I will
-                notify you of any changes by posting the new Privacy Policy on
-                this page. You are advised to review this Privacy Policy
-                periodically for any changes.
+                I may update this Privacy Policy from time to time. I will notify you of
+                any changes by posting the new Privacy Policy on this page. You are advised
+                to review this Privacy Policy periodically for any changes.
               </p>
 
-              <h3 className="text-2xl font-bold text-gray-800 mb-3">
-                8. Contact Me
-              </h3>
+              <h3 className="text-2xl font-bold text-gray-800 mb-3">8. Contact Me</h3>
               <p className="text-lg text-gray-700">
-                If you have any questions about this Privacy Policy, please
-                contact me at <b> vasanthm996@gmail.com</b>.
+                If you have any questions about this Privacy Policy, please contact me at **[Your Email Address, e.g., developer.codecrafter@email.com]**.
               </p>
             </div>
-            <button
-              onClick={handleGoHome}
-              className="px-6 py-2 bg-gray-300 text-gray-800 rounded-full hover:bg-gray-400 transition-colors duration-200 focus:outline-none focus:ring-4 focus:ring-gray-300"
-            >
+            <button onClick={handleGoHome} className="px-6 py-2 bg-gray-300 text-gray-800 rounded-full hover:bg-gray-400 transition-colors duration-200 focus:outline-none focus:ring-4 focus:ring-gray-300">
               Back to Home
             </button>
           </div>
@@ -1371,167 +1196,107 @@ function App() {
         {/* Terms of Service Page */}
         {page === "terms" && (
           <div className="text-center">
-            <h2 className="text-4xl font-bold text-gray-800 mb-6">
-              Terms of Service
-            </h2>
+            <h2 className="text-4xl font-bold text-gray-800 mb-6">Terms of Service</h2>
             <div className="text-left bg-gray-50 p-8 rounded-xl shadow-lg mb-8">
               <p className="text-lg text-gray-700 mb-4">
-                <b>Last Updated:</b> July 26, 2025
+                **Last Updated:** July 26, 2025
               </p>
               <p className="text-lg text-gray-700 mb-4">
-                Welcome to <b>CodeCrafter Quizzes</b>! These Terms of Service
-                ("Terms") govern your access to and use of my quiz application
-                (the "App"), provided by me, <b>VasanthM</b>. By accessing or
-                using the App, you agree to be bound by these Terms.
+                Welcome to **CodeCrafter Quizzes**! These Terms of Service ("Terms") govern your access to
+                and use of my quiz application (the "App"), provided by me, **[Your Full Name/Developer Name]** (the "Developer," "I," or "me").
+                By accessing or using the App, you agree to be bound by these Terms.
               </p>
 
-              <h3 className="text-2xl font-bold text-gray-800 mb-3">
-                1. Acceptance of Terms
-              </h3>
+              <h3 className="text-2xl font-bold text-gray-800 mb-3">1. Acceptance of Terms</h3>
               <p className="text-lg text-gray-700 mb-4">
-                By accessing or using the App, you acknowledge that you have
-                read, understood, and agree to be bound by these Terms and my
-                Privacy Policy. If you do not agree with these Terms, you may
-                not use the App.
+                By accessing or using the App, you acknowledge that you have read, understood,
+                and agree to be bound by these Terms and my Privacy Policy. If you do not
+                agree with these Terms, you may not use the App.
               </p>
 
-              <h3 className="text-2xl font-bold text-gray-800 mb-3">
-                2. Use of the App
-              </h3>
+              <h3 className="text-2xl font-bold text-gray-800 mb-3">2. Use of the App</h3>
               <ul className="list-disc list-inside text-gray-700 mb-4 pl-4">
                 <li>
-                  <b>Eligibility:</b>You must be at least 13 years of age to use
-                  the App. By using the App, you represent and warrant that you
-                  meet this age requirement.
+                  **Eligibility:** You must be at least 13 years of age to use the App. By using the App, you represent and warrant that you meet this age requirement.
                 </li>
                 <li>
-                  <b>Permitted Use:</b> The App is provided for your personal,
-                  non-commercial use only, for the purpose of learning and
-                  testing programming and coding knowledge. You may not use the
-                  App for any illegal or unauthorized purpose.
+                  **Permitted Use:** The App is provided for your personal, non-commercial use only, for the purpose of learning and testing programming and coding knowledge. You may not use the App for any illegal or unauthorized purpose.
                 </li>
                 <li>
-                  <b>Prohibited Conduct:</b>You agree not to engage in any
-                  activity that interferes with or disrupts the App, including
-                  but not limited to:
+                  **Prohibited Conduct:** You agree not to engage in any activity that interferes with or disrupts the App, including but not limited to:
                   <ul className="list-circle list-inside ml-6 mt-2">
-                    <li>
-                      Distributing spam, malware, or other harmful content.
-                    </li>
-                    <li>
-                      Attempting to gain unauthorized access to the App's
-                      systems or data.
-                    </li>
-                    <li>
-                      Copying, modifying, or distributing any quiz content,
-                      questions, or explanations from the App without my express
-                      written permission.
-                    </li>
-                    <li>
-                      Using automated systems or software to access or scrape
-                      content from the App, or to automate quiz taking.
-                    </li>
-                    <li>
-                      Attempting to reverse engineer, decompile, or disassemble
-                      any part of the App.
-                    </li>
+                    <li>Distributing spam, malware, or other harmful content.</li>
+                    <li>Attempting to gain unauthorized access to the App's systems or data.</li>
+                    <li>Copying, modifying, or distributing any quiz content, questions, or explanations from the App without my express written permission.</li>
+                    <li>Using automated systems or software to access or scrape content from the App, or to automate quiz taking.</li>
+                    <li>Attempting to reverse engineer, decompile, or disassemble any part of the App.</li>
                   </ul>
                 </li>
               </ul>
 
-              <h3 className="text-2xl font-bold text-gray-800 mb-3">
-                3. Intellectual Property
-              </h3>
+              <h3 className="text-2xl font-bold text-gray-800 mb-3">3. Intellectual Property</h3>
               <p className="text-lg text-gray-700 mb-4">
-                All content on the App, including quizzes, questions,
-                explanations, text, graphics, logos, and images, are my sole
-                property as the Developer, or used under license, and are
-                protected by intellectual property laws. You may not reproduce,
-                distribute, modify, create derivative works of, publicly
-                display, publicly perform, republish, download, store, or
-                transmit any of the material on our App, except as generally and
-                ordinarily permitted through the App's normal functionality.
+                All content on the App, including quizzes, questions, explanations, text, graphics,
+                logos, and images, are my sole property as the Developer, or used under license,
+                and are protected by intellectual property laws. You may not reproduce, distribute,
+                modify, create derivative works of, publicly display, publicly perform, republish,
+                download, store, or transmit any of the material on our App, except as generally
+                and ordinarily permitted through the App's normal functionality.
               </p>
               <p className="text-lg text-gray-700 mb-4">
-                The name <b> CodeCrafter Quizzes</b>, and all related names,
-                logos, product and service names, designs, and slogans are
-                trademarks belonging to me. You must not use such marks without
-                my prior written permission.
+                The name "CodeCrafter Quizzes," and all related names, logos, product and service
+                names, designs, and slogans are trademarks belonging to me. You must not use such marks
+                without my prior written permission.
               </p>
 
-              <h3 className="text-2xl font-bold text-gray-800 mb-3">
-                4. Disclaimers
-              </h3>
+
+              <h3 className="text-2xl font-bold text-gray-800 mb-3">4. Disclaimers</h3>
               <p className="text-lg text-gray-700 mb-4">
-                The App is provided on an <b>as-is</b> and <b>as-available</b>{" "}
-                basis. I make no warranties, expressed or implied, regarding the
-                accuracy, reliability, or completeness of any programming
-                content on the App or that the App will be uninterrupted,
-                error-free, or secure. While I strive for accuracy in all
-                programming questions and explanations, the field of technology
-                is constantly evolving, and I cannot guarantee that all
+                The App is provided on an "as-is" and "as-available" basis. I make no warranties,
+                expressed or implied, regarding the accuracy, reliability, or completeness of any
+                programming content on the App or that the App will be uninterrupted, error-free,
+                or secure. While I strive for accuracy in all programming questions and explanations,
+                the field of technology is constantly evolving, and I cannot guarantee that all
                 information will always be perfectly up-to-date or exhaustive.
               </p>
 
-              <h3 className="text-2xl font-bold text-gray-800 mb-3">
-                5. Limitation of Liability
-              </h3>
+              <h3 className="text-2xl font-bold text-gray-800 mb-3">5. Limitation of Liability</h3>
               <p className="text-lg text-gray-700 mb-4">
-                To the fullest extent permitted by applicable law, I,{" "}
-                <b>VasanthM</b>, shall not be liable for any indirect,
-                incidental, special, consequential, or punitive damages, or any
-                loss of profits or revenues, whether incurred directly or
-                indirectly, or any loss of data, use, goodwill, or other
-                intangible losses, resulting from (a) your access to or use of
-                or inability to access or use the App; (b) any conduct or
-                content of any third party on the App; or (c) unauthorized
-                access, use, or alteration of your transmissions or content. My
-                total liability to you for any damages, losses, and causes of
-                action (whether in contract, tort including negligence, or
-                otherwise) will not exceed the amount paid by you, if any, for
-                accessing the App during the twelve (12) months immediately
-                preceding the date of the claim or one hundred U.S. dollars
-                ($100), whichever is greater.
+                To the fullest extent permitted by applicable law, I, **[Your Full Name/Developer Name]**, shall
+                not be liable for any indirect, incidental, special, consequential, or punitive damages,
+                or any loss of profits or revenues, whether incurred directly or indirectly, or any loss of
+                data, use, goodwill, or other intangible losses, resulting from (a) your access to or
+                use of or inability to access or use the App; (b) any conduct or content of any
+                third party on the App; or (c) unauthorized access, use, or alteration of your transmissions
+                or content. My total liability to you for any damages, losses, and causes of action
+                (whether in contract, tort including negligence, or otherwise) will not exceed the
+                amount paid by you, if any, for accessing the App during the twelve (12) months immediately
+                preceding the date of the claim or one hundred U.S. dollars ($100), whichever is greater.
               </p>
 
-              <h3 className="text-2xl font-bold text-gray-800 mb-3">
-                6. Changes to Terms
-              </h3>
+              <h3 className="text-2xl font-bold text-gray-800 mb-3">6. Changes to Terms</h3>
               <p className="text-lg text-gray-700 mb-4">
-                I reserve the right to modify or replace these Terms at any
-                time. If a revision is material, I will provide at least 30
-                days' notice prior to any new terms taking effect. What
-                constitutes a material change will be determined at my sole
-                discretion. By continuing to access or use my App after those
-                revisions become effective, you agree to be bound by the revised
-                terms.
+                I reserve the right to modify or replace these Terms at any time. If a revision
+                is material, I will provide at least 30 days' notice prior to any new terms
+                taking effect. What constitutes a material change will be determined at my
+                sole discretion. By continuing to access or use my App after those revisions
+                become effective, you agree to be bound by the revised terms.
               </p>
 
-              <h3 className="text-2xl font-bold text-gray-800 mb-3">
-                7. Governing Law
-              </h3>
+              <h3 className="text-2xl font-bold text-gray-800 mb-3">7. Governing Law</h3>
               <p className="text-lg text-gray-700 mb-4">
-                These Terms shall be governed and construed in accordance with
-                the laws of<b> India, specifically Tamil Nadu</b>, without
-                regard to its conflict of law provisions. Any legal action or
-                proceeding arising under these Terms will be brought exclusively
-                in the courts located in <b>Madurai, Tamil Nadu, India</b>, and
-                you hereby consent to the personal jurisdiction and venue
-                therein.
+                These Terms shall be governed and construed in accordance with the laws of **India, specifically Tamil Nadu**,
+                without regard to its conflict of law provisions. Any legal action or proceeding arising
+                under these Terms will be brought exclusively in the courts located in **Madurai, Tamil Nadu, India**,
+                and you hereby consent to the personal jurisdiction and venue therein.
               </p>
 
-              <h3 className="text-2xl font-bold text-gray-800 mb-3">
-                8. Contact Me
-              </h3>
+              <h3 className="text-2xl font-bold text-gray-800 mb-3">8. Contact Me</h3>
               <p className="text-lg text-gray-700">
-                If you have any questions about these Terms, please contact me
-                at <b>vasanthm996@gmail.com</b>.
+                If you have any questions about these Terms, please contact me at **[Your Email Address, e.g., developer.codecrafter@email.com]**.
               </p>
             </div>
-            <button
-              onClick={handleGoHome}
-              className="px-6 py-2 bg-gray-300 text-gray-800 rounded-full hover:bg-gray-400 transition-colors duration-200 focus:outline-none focus:ring-4 focus:ring-gray-300"
-            >
+            <button onClick={handleGoHome} className="px-6 py-2 bg-gray-300 text-gray-800 rounded-full hover:bg-gray-400 transition-colors duration-200 focus:outline-none focus:ring-4 focus:ring-gray-300">
               Back to Home
             </button>
           </div>
@@ -1540,40 +1305,29 @@ function App() {
         {/* Blog Overview Page */}
         {page === "blog" && (
           <div className="text-center">
-            <h2 className="text-4xl font-bold text-gray-800 mb-6">
-              CodeCrafter Blog: Insights & Tips
-            </h2>
+            <h2 className="text-4xl font-bold text-gray-800 mb-6">CodeCrafter Blog: Insights & Tips</h2>
             <div className="text-left bg-gray-50 p-8 rounded-xl shadow-lg mb-8">
               <p className="text-lg text-gray-700 mb-4">
-                Welcome to the <b> CodeCrafter Blog</b>! Here, I share articles,
-                insights, and tips on various programming concepts, coding best
-                practices, and the latest trends in software development. My aim
-                is to complement your quiz-taking experience with deeper dives
-                into topics that matter to every aspiring and seasoned
-                developer.
+                Welcome to the **CodeCrafter Blog**! Here, I share articles, insights, and tips
+                on various programming concepts, coding best practices, and the latest trends
+                in software development. My aim is to complement your quiz-taking experience
+                with deeper dives into topics that matter to every aspiring and seasoned developer.
               </p>
               <p className="text-lg text-gray-700 mb-6">
-                Browse through the articles below and click "Read More" to dive
-                into the full content!
+                Browse through the articles below and click "Read More" to dive into the full content!
               </p>
 
               {/* Map through blogPosts to display summaries */}
               {blogPosts.map((post) => (
-                <div
-                  key={post.id}
-                  className="mb-8 p-6 bg-white rounded-lg shadow-md border border-blue-100 flex flex-col justify-between"
-                >
+                <div key={post.id} className="mb-8 p-6 bg-white rounded-lg shadow-md border border-blue-100 flex flex-col justify-between">
                   <div>
-                    <h3 className="text-3xl font-bold text-blue-800 mb-3">
-                      {post.title}
-                    </h3>
+                    <h3 className="text-3xl font-bold text-blue-800 mb-3">{post.title}</h3>
                     <p className="text-sm text-gray-500 mb-4">
-                      <b>
-                        {" "}
-                        Posted on {post.date} by {post.author}
-                      </b>
+                      *Posted on {post.date} by {post.author}*
                     </p>
-                    <p className="text-lg text-gray-700 mb-4">{post.excerpt}</p>
+                    <p className="text-lg text-gray-700 mb-4">
+                      **{post.excerpt}**
+                    </p>
                   </div>
                   <button
                     onClick={() => handleReadMore(post.id)}
@@ -1589,15 +1343,13 @@ function App() {
                   More exciting programming content coming soon!
                 </h3>
                 <p className="text-lg text-gray-600">
-                  I'm constantly working on new articles and insights to help
-                  you on your coding journey. Check back soon for updates!
+                  I'm constantly working on new articles and insights to help you
+                  on your coding journey. Check back soon for updates!
                 </p>
               </div>
+
             </div>
-            <button
-              onClick={handleGoHome}
-              className="px-6 py-2 bg-gray-300 text-gray-800 rounded-full hover:bg-gray-400 transition-colors duration-200 focus:outline-none focus:ring-4 focus:ring-gray-300"
-            >
+            <button onClick={handleGoHome} className="px-6 py-2 bg-gray-300 text-gray-800 rounded-full hover:bg-gray-400 transition-colors duration-200 focus:outline-none focus:ring-4 focus:ring-gray-300">
               Back to Home
             </button>
           </div>
@@ -1606,37 +1358,26 @@ function App() {
         {/* Single Blog Post Page */}
         {page === "blogPost" && selectedBlogPost && (
           <div className="text-center">
-            <h2 className="text-4xl font-bold text-gray-800 mb-6">
-              {selectedBlogPost.title}
-            </h2>
+            <h2 className="text-4xl font-bold text-gray-800 mb-6">{selectedBlogPost.title}</h2>
             <div className="text-left bg-gray-50 p-8 rounded-xl shadow-lg mb-8">
               <p className="text-sm text-gray-500 mb-6">
-                <b>
-                  Posted on {selectedBlogPost.date} by {selectedBlogPost.author}
-                </b>
+                *Posted on {selectedBlogPost.date} by {selectedBlogPost.author}*
               </p>
               {/* Using dangerouslySetInnerHTML to render HTML content */}
               <div
                 className="prose prose-lg max-w-none text-gray-700" // Tailwind Typography classes for better markdown rendering
-                dangerouslySetInnerHTML={{
-                  __html: selectedBlogPost.fullContent,
-                }}
+                dangerouslySetInnerHTML={{ __html: selectedBlogPost.fullContent }}
               />
             </div>
-            <button
-              onClick={() => setPage("blog")}
-              className="px-6 py-2 bg-gray-300 text-gray-800 rounded-full hover:bg-gray-400 transition-colors duration-200 focus:outline-none focus:ring-4 focus:ring-gray-300"
-            >
+            <button onClick={() => setPage('blog')} className="px-6 py-2 bg-gray-300 text-gray-800 rounded-full hover:bg-gray-400 transition-colors duration-200 focus:outline-none focus:ring-4 focus:ring-gray-300">
               Back to Blog
             </button>
-            <button
-              onClick={handleGoHome}
-              className="ml-4 px-6 py-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-colors duration-200 focus:outline-none focus:ring-4 focus:ring-blue-300"
-            >
+            <button onClick={handleGoHome} className="ml-4 px-6 py-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-colors duration-200 focus:outline-none focus:ring-4 focus:ring-blue-300">
               Back to Home
             </button>
           </div>
         )}
+
       </div>
     </div>
   );
