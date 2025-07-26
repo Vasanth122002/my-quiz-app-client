@@ -191,12 +191,21 @@ function App() {
     const fetchQuizzes = async () => {
       try {
         const response = await axios.get("/api/quizzes");
-        setQuizzes(response.data);
+        if (Array.isArray(response.data)) {
+          setQuizzes(response.data);
+        } else {
+          console.error(
+            "API did not return an array for quizzes:",
+            response.data
+          );
+          setQuizzes([]); // Default to empty array on unexpected response
+        }
       } catch (error) {
         console.error("Error fetching quizzes:", error);
         alert(
           "Failed to load quizzes. Please check if the backend server is running."
         );
+        setQuizzes([]);
       }
     };
     fetchQuizzes();
@@ -434,6 +443,13 @@ function App() {
 
   // Extract unique topics from available quizzes
   const getUniqueTopics = () => {
+    // Ensure quizzes is an array before calling forEach
+    if (!Array.isArray(quizzes)) {
+      console.warn(
+        "Quizzes data is not an array, defaulting to empty for topics."
+      );
+      return [];
+    }
     const topics = new Set();
     quizzes.forEach((quiz) => topics.add(quiz.topic));
     return Array.from(topics);
