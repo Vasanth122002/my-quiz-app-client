@@ -478,7 +478,7 @@ function App() {
       id: "understanding-async-js",
       title:
         "Understanding Asynchronous JavaScript: Callbacks, Promises, and Async/Await",
-      author: "[Your Name]", // Replace with your name
+      author: "[VasanthM]", // Replace with your name
       date: "July 20, 2025",
       excerpt:
         "Asynchronous programming is a fundamental concept in JavaScript that often confuses beginners. Learn about callbacks, promises, and the modern async/await syntax to write non-blocking code.",
@@ -576,7 +576,7 @@ function App() {
       id: "python-data-structures",
       title:
         "The Basics of Python Data Structures: Lists, Tuples, Sets, and Dictionaries",
-      author: "[Your Name]", // Replace with your name
+      author: "[VasanthM]", // Replace with your name
       date: "July 15, 2025",
       excerpt:
         "Python offers powerful built-in data structures. Learn about Lists, Tuples, Sets, and Dictionaries and when to use each for efficient data management.",
@@ -647,7 +647,7 @@ function App() {
     {
       id: "effective-debugging-tips",
       title: "Effective Debugging Tips for Programmers",
-      author: "[Your Name]", // Replace with your name
+      author: "[VasanthM]", // Replace with your name
       date: "July 10, 2025",
       excerpt:
         "Bugs are an inevitable part of coding. Learn essential debugging strategies to quickly identify and fix issues in your code, saving you time and frustration.",
@@ -767,12 +767,12 @@ function App() {
               CodeCrafter Quizzes
             </h1>
             <p className="text-lg text-gray-700 mb-8 max-w-2xl mx-auto">
-              Welcome to the ultimate platform to test your **programming
-              knowledge and coding concepts**! Select a topic and challenge
-              yourself with our expertly crafted quizzes. Our quizzes are
-              designed not just to test what you know, but also to help you
-              discover new facts and deepen your understanding across various
-              programming languages and technical domains.
+              Welcome to the ultimate platform to test your{" "}
+              <b>programming knowledge and coding concepts</b>! Select a topic
+              and challenge yourself with our expertly crafted quizzes. Our
+              quizzes are designed not just to test what you know, but also to
+              help you discover new facts and deepen your understanding across
+              various programming languages and technical domains.
             </p>
 
             {/* Enhanced Home Page Content for AdSense (Programming/Coding Focused) */}
@@ -781,23 +781,28 @@ function App() {
                 Master Programming and Coding with Engaging Quizzes
               </h2>
               <p className="text-gray-700 mb-4">
-                Welcome to **CodeCrafter Quizzes**, your premier platform for
-                testing and enhancing your programming knowledge! We offer a
-                diverse range of quizzes covering core concepts in **Python,
-                JavaScript, Java, C++, data structures, algorithms,
-                object-oriented programming, web development fundamentals,
-                cybersecurity basics, and more**. Each quiz is meticulously
-                designed by a dedicated programmer (that's me!) to provide an
-                engaging and educational experience.
+                Welcome to <b> CodeCrafter Quizzes</b>, your premier platform
+                for testing and enhancing your programming knowledge! We offer a
+                diverse range of quizzes covering core concepts in{" "}
+                <b>
+                  Python, JavaScript, Java, C++, data structures, algorithms,
+                  object-oriented programming, web development fundamentals,
+                  cybersecurity basics, and more
+                </b>
+                . Each quiz is meticulously designed by a dedicated programmer
+                (that's me!) to provide an engaging and educational experience.
               </p>
               <p className="text-gray-700 mb-4">
-                Whether you're a **student learning your first language, a
-                developer looking to sharpen specific skills, an aspiring coder
-                preparing for interviews**, or simply someone passionate about
-                the logic and art of programming, you'll find quizzes that
-                challenge, inform, and entertain. Our interactive format makes
-                learning complex coding concepts enjoyable and accessible for
-                all levels.
+                Whether you're a{" "}
+                <b>
+                  student learning your first language, a developer looking to
+                  sharpen specific skills, an aspiring coder preparing for
+                  interviews
+                </b>
+                , or simply someone passionate about the logic and art of
+                programming, you'll find quizzes that challenge, inform, and
+                entertain. Our interactive format makes learning complex coding
+                concepts enjoyable and accessible for all levels.
               </p>
               <p className="text-gray-700">
                 I am constantly expanding this library with the latest
@@ -823,14 +828,14 @@ function App() {
               </h2>
               <ul className="list-disc list-inside text-gray-700 space-y-2">
                 <li>
-                  Click "Start Coding Quizzes" to view available programming
+                  Click<b>Start Coding Quizzes</b> to view available programming
                   topics.
                 </li>
                 <li>
                   Choose your desired programming language or concept topic.
                 </li>
                 <li>
-                  Read the instructions carefully, then click "Start Quiz".
+                  Read the instructions carefully, then click <b>Start Quiz</b>.
                 </li>
                 <li>
                   Answer questions within the given time limit, focusing on
@@ -849,12 +854,6 @@ function App() {
             <div className="mt-10 pt-4 border-t border-gray-200 text-gray-600 text-sm">
               {isAuthReady ? (
                 <>
-                  <p>
-                    Total Unique Visitors:{" "}
-                    <span className="font-bold text-blue-600">
-                      {totalUniqueVisitors}
-                    </span>
-                  </p>
                   <p>
                     Your Anonymous User ID:{" "}
                     <span className="font-mono text-xs break-all">
@@ -1105,26 +1104,27 @@ function App() {
                     What's Next? Continue Coding!
                   </h3>
                   <p className="text-gray-700 mb-4">
-                    You've completed the "{selectedQuiz.name}" quiz! Programming
-                    is a continuous journey. To further enhance your knowledge
-                    on <span className="font-bold">{selectedQuiz.topic}</span>,
+                    You've completed the <b> {selectedQuiz.name}</b> quiz!
+                    Programming is a continuous journey. To further enhance your
+                    knowledge on{" "}
+                    <span className="font-bold">{selectedQuiz.topic}</span>,
                     consider exploring the following:
                   </p>
                   <ul className="list-disc list-inside text-gray-700 space-y-2">
                     <li>
-                      **Explore more quizzes:** Navigate back to the topics page
-                      and try another quiz in a related programming area.
+                      <b> Explore more quizzes:</b> Navigate back to the topics
+                      page and try another quiz in a related programming area.
                     </li>
                     <li>
-                      **Practice coding:** The best way to learn is by doing!
-                      Head to your favorite IDE and start coding.
+                      <b> Practice coding:</b> The best way to learn is by
+                      doing! Head to your favorite IDE and start coding.
                     </li>
                     <li>
-                      **Consult Documentation:** Refer to official language
+                      <b>Consult Documentation:</b> Refer to official language
                       documentation for deeper understanding.
                     </li>
                     <li>
-                      **Read our Blog:** Check out our latest articles for
+                      <b>Read our Blog:</b>Check out our latest articles for
                       coding tips and insights!
                     </li>
                   </ul>
@@ -1151,30 +1151,42 @@ function App() {
             </h2>
             <div className="text-left bg-gray-50 p-8 rounded-xl shadow-lg mb-8">
               <p className="text-lg text-gray-700 mb-4">
-                Welcome to **CodeCrafter Quizzes**! I am passionate about making
-                **programming and coding concept learning engaging, accessible,
-                and fun** for everyone. My mission is to provide a high-quality
-                platform where you can **test and expand your knowledge across a
-                wide array of programming languages and technical subjects**,
-                from foundational syntax to advanced algorithmic thinking. My
+                Welcome to <b>CodeCrafter Quizzes</b>! I am passionate about
+                making{" "}
+                <b>
+                  programming and coding concept learning engaging, accessible,
+                  and fun
+                </b>{" "}
+                for everyone. My mission is to provide a high-quality platform
+                where you can{" "}
+                <b>
+                  {" "}
+                  test and expand your knowledge across a wide array of
+                  programming languages and technical subjects
+                </b>
+                , from foundational syntax to advanced algorithmic thinking. My
                 goal is to help you learn new coding facts and deepen your
                 understanding of software development.
               </p>
               <p className="text-lg text-gray-700 mb-4">
                 As the sole creator of this application, I meticulously design
-                each quiz and question to ensure **accuracy, relevance, and an
-                enjoyable learning experience**. I believe that interactive
-                quizzes are a powerful tool for **coding education and personal
-                development in tech**, offering immediate feedback and
-                highlighting areas for further exploration in your journey
-                through the ever-evolving landscape of programming.
+                each quiz and question to ensure{" "}
+                <b>accuracy, relevance, and an enjoyable learning experience</b>{" "}
+                . I believe that interactive quizzes are a powerful tool for
+                <b>coding education and personal development in tech</b>,
+                offering immediate feedback and highlighting areas for further
+                exploration in your journey through the ever-evolving landscape
+                of programming.
               </p>
               <p className="text-lg text-gray-700 mb-4">
                 I am committed to continuously expanding this quiz library,
-                covering everything from **Python, JavaScript, Java, and C++
-                fundamentals to data structures, algorithms, object-oriented
-                programming, web development frameworks, database concepts, and
-                more**. Your curiosity for coding is my inspiration!
+                covering everything from{" "}
+                <b>
+                  Python, JavaScript, Java, and C++ fundamentals to data
+                  structures, algorithms, object-oriented programming, web
+                  development frameworks, database concepts, and more
+                </b>
+                . Your curiosity for coding is my inspiration!
               </p>
               <p className="text-lg text-gray-700">
                 Thank you for being a part of this learning community. I hope
@@ -1199,14 +1211,13 @@ function App() {
             </h2>
             <div className="text-left bg-gray-50 p-8 rounded-xl shadow-lg mb-8">
               <p className="text-lg text-gray-700 mb-4">
-                **Effective Date:** July 26, 2025
+                <b>Effective Date:</b> July 26, 2025
               </p>
               <p className="text-lg text-gray-700 mb-4">
                 Your privacy is important to me. This Privacy Policy explains
-                how I, **[Your Full Name/Developer Name]** (the "Developer,"
-                "I," or "me"), the sole owner and operator of **CodeCrafter
-                Quizzes** (the "App"), collect, use, and disclose information
-                about you when you use my quiz application.
+                how I, <b>VasanthM</b>, the sole owner and operator of{" "}
+                <b>CodeCrafter Quizzes</b> (the "App"), collect, use, and
+                disclose information about you when you use my quiz application.
               </p>
               <h3 className="text-2xl font-bold text-gray-800 mb-3">
                 1. Information I Collect
@@ -1217,21 +1228,21 @@ function App() {
               </p>
               <ul className="list-disc list-inside text-gray-700 mb-4 pl-4">
                 <li>
-                  **Anonymous Usage Data:** I use Google Analytics 4 (GA4) and
-                  Firebase to collect anonymous data about how users interact
-                  with my App, such as pages visited, quizzes taken, time spent
-                  on the App, and device information. This data is aggregated
-                  and does not personally identify you.
+                  <b>Anonymous Usage Data:</b> I use Google Analytics 4 (GA4)
+                  and Firebase to collect anonymous data about how users
+                  interact with my App, such as pages visited, quizzes taken,
+                  time spent on the App, and device information. This data is
+                  aggregated and does not personally identify you.
                 </li>
                 <li>
-                  **Firebase Anonymous Authentication:** I use Firebase
+                  <b>Firebase Anonymous Authentication:</b> I use Firebase
                   Anonymous Authentication to provide a persistent, anonymous
                   user ID for each visitor. This helps me track unique visitors
                   and basic usage patterns within the App without collecting
                   personal information.
                 </li>
                 <li>
-                  **No Personal Identifiable Information (PII):** I do not
+                  <b>No Personal Identifiable Information (PII):</b> I do not
                   intentionally collect any personally identifiable information
                   (e.g., names, email addresses, contact details) from users
                   through the App itself. All quiz interactions and scores are
@@ -1278,13 +1289,13 @@ function App() {
               </p>
               <ul className="list-disc list-inside text-gray-700 mb-4 pl-4">
                 <li>
-                  **Service Providers:** I may share anonymous usage data with
+                  <b>Service Providers:</b>I may share anonymous usage data with
                   third-party service providers like Google Analytics and
                   Firebase for analytics and anonymous authentication purposes.
                   These providers are bound by their own privacy policies.
                 </li>
                 <li>
-                  **Legal Compliance:** I may disclose anonymous user IDs if
+                  <b>Legal Compliance:</b> I may disclose anonymous user IDs if
                   required to do so by law or in the good faith belief that such
                   action is necessary to comply with a legal obligation, protect
                   my rights or property, or prevent fraud.
@@ -1354,8 +1365,7 @@ function App() {
               </h3>
               <p className="text-lg text-gray-700">
                 If you have any questions about this Privacy Policy, please
-                contact me at **[Your Email Address, e.g.,
-                developer.codecrafter@email.com]**.
+                contact me at <b>vasanthm996@gmail.com</b>.
               </p>
             </div>
             <button
@@ -1375,14 +1385,13 @@ function App() {
             </h2>
             <div className="text-left bg-gray-50 p-8 rounded-xl shadow-lg mb-8">
               <p className="text-lg text-gray-700 mb-4">
-                **Last Updated:** July 26, 2025
+                <b>Last Updated:</b> July 26, 2025
               </p>
               <p className="text-lg text-gray-700 mb-4">
-                Welcome to **CodeCrafter Quizzes**! These Terms of Service
+                Welcome to <b>CodeCrafter Quizzes</b>! These Terms of Service
                 ("Terms") govern your access to and use of my quiz application
-                (the "App"), provided by me, **[Your Full Name/Developer Name]**
-                (the "Developer," "I," or "me"). By accessing or using the App,
-                you agree to be bound by these Terms.
+                (the "App"), provided by me, <b>VasanthM</b>. By accessing or
+                using the App, you agree to be bound by these Terms.
               </p>
 
               <h3 className="text-2xl font-bold text-gray-800 mb-3">
@@ -1400,18 +1409,18 @@ function App() {
               </h3>
               <ul className="list-disc list-inside text-gray-700 mb-4 pl-4">
                 <li>
-                  **Eligibility:** You must be at least 13 years of age to use
-                  the App. By using the App, you represent and warrant that you
-                  meet this age requirement.
+                  <b>Eligibility:</b> You must be at least 13 years of age to
+                  use the App. By using the App, you represent and warrant that
+                  you meet this age requirement.
                 </li>
                 <li>
-                  **Permitted Use:** The App is provided for your personal,
+                  <b>Permitted Use:</b> The App is provided for your personal,
                   non-commercial use only, for the purpose of learning and
                   testing programming and coding knowledge. You may not use the
                   App for any illegal or unauthorized purpose.
                 </li>
                 <li>
-                  **Prohibited Conduct:** You agree not to engage in any
+                  <b>Prohibited Conduct:</b> You agree not to engage in any
                   activity that interferes with or disrupts the App, including
                   but not limited to:
                   <ul className="list-circle list-inside ml-6 mt-2">
@@ -1512,11 +1521,12 @@ function App() {
               </h3>
               <p className="text-lg text-gray-700 mb-4">
                 These Terms shall be governed and construed in accordance with
-                the laws of **India, specifically Tamil Nadu**, without regard
-                to its conflict of law provisions. Any legal action or
+                the laws of <b>India, specifically Tamil Nadu</b>, without
+                regard to its conflict of law provisions. Any legal action or
                 proceeding arising under these Terms will be brought exclusively
-                in the courts located in **Madurai, Tamil Nadu, India**, and you
-                hereby consent to the personal jurisdiction and venue therein.
+                in the courts located in <b>Madurai, Tamil Nadu, India</b>, and
+                you hereby consent to the personal jurisdiction and venue
+                therein.
               </p>
 
               <h3 className="text-2xl font-bold text-gray-800 mb-3">
@@ -1524,8 +1534,7 @@ function App() {
               </h3>
               <p className="text-lg text-gray-700">
                 If you have any questions about these Terms, please contact me
-                at **[Your Email Address, e.g.,
-                developer.codecrafter@email.com]**.
+                at <b>vasanthm996@gmail.com</b>.
               </p>
             </div>
             <button
@@ -1545,7 +1554,7 @@ function App() {
             </h2>
             <div className="text-left bg-gray-50 p-8 rounded-xl shadow-lg mb-8">
               <p className="text-lg text-gray-700 mb-4">
-                Welcome to the **CodeCrafter Blog**! Here, I share articles,
+                Welcome to the <b>CodeCrafter Blog</b>! Here, I share articles,
                 insights, and tips on various programming concepts, coding best
                 practices, and the latest trends in software development. My aim
                 is to complement your quiz-taking experience with deeper dives
@@ -1553,8 +1562,8 @@ function App() {
                 developer.
               </p>
               <p className="text-lg text-gray-700 mb-6">
-                Browse through the articles below and click "Read More" to dive
-                into the full content!
+                Browse through the articles below and click <b>Read More</b> to
+                dive into the full content!
               </p>
 
               {/* Map through blogPosts to display summaries */}
@@ -1568,11 +1577,11 @@ function App() {
                       {post.title}
                     </h3>
                     <p className="text-sm text-gray-500 mb-4">
-                      *Posted on {post.date} by {post.author}*
+                      <b>
+                        Posted on {post.date} by {post.author}
+                      </b>
                     </p>
-                    <p className="text-lg text-gray-700 mb-4">
-                      **{post.excerpt}**
-                    </p>
+                    <p className="text-lg text-gray-700 mb-4">{post.excerpt}</p>
                   </div>
                   <button
                     onClick={() => handleReadMore(post.id)}
@@ -1610,7 +1619,9 @@ function App() {
             </h2>
             <div className="text-left bg-gray-50 p-8 rounded-xl shadow-lg mb-8">
               <p className="text-sm text-gray-500 mb-6">
-                *Posted on {selectedBlogPost.date} by {selectedBlogPost.author}*
+                <b>
+                  Posted on {selectedBlogPost.date} by {selectedBlogPost.author}
+                </b>
               </p>
               {/* Using dangerouslySetInnerHTML to render HTML content */}
               <div
