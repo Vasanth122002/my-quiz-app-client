@@ -1486,8 +1486,8 @@ function App() {
                 5. Limitation of Liability
               </h3>
               <p className="text-lg text-gray-700 mb-4">
-                To the fullest extent permitted by applicable law, I, **[Your
-                Full Name/Developer Name]**, shall not be liable for any
+                To the fullest extent permitted by applicable law, I,<b>VasanthM</b>
+               , shall not be liable for any
                 indirect, incidental, special, consequential, or punitive
                 damages, or any loss of profits or revenues, whether incurred
                 directly or indirectly, or any loss of data, use, goodwill, or
